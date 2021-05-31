@@ -5,6 +5,7 @@ class TicTacToe
   def initialize
     @board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
   end
+
   WIN_COMBINATIONS = [
     [0,1,2],
     [3,4,5],
@@ -54,7 +55,7 @@ class TicTacToe
     index.between?(0,8) && !position_taken?(index)
   end
 
-  def turn
+  def turn(input)
     puts "Please make a selection between 1-9"
     input = gets.strip
     index = input_to_index(input)
