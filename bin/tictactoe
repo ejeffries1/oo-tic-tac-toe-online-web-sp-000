@@ -3,5 +3,8 @@
 #require 'pry'
 require_relative '../lib/tic_tac_toe.rb'
 
+game = TicTacToe.new
+game.play
+
 puts "Please make a selection between 1-9"
 input = gets.strip

@@ -1,10 +1,12 @@
 require 'pry'
 
 class TicTacToe
+  
 
-  def initialize
-    @board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+  def initialize(board = nil)
+    @board = board || Array.new(9, " ")
   end
+
   WIN_COMBINATIONS = [
     [0,1,2],
     [3,4,5],
@@ -21,7 +23,9 @@ class TicTacToe
   end
 
   def turn_count
-    @board.count{|token| token == "X" || token == "O"}
+    count = 0 
+    @board.each{|token| count += 1 if token == "X" || token == "O"}
+    count
   end
 
   def display_board
@@ -38,6 +42,7 @@ class TicTacToe
 
   def move(index, token = "X")
     @board[index] = token
+    @board
   end
 
   def position_taken?(index)
@@ -55,34 +60,64 @@ class TicTacToe
   end
 
   def turn
-    puts "Please make a selection between 1-9"
+    puts "#{current_player} Please make a selection between 1-9"
     input = gets.strip
     index = input_to_index(input)
-    current_player
-    if valid_move?(index)
-      move(index, current_player)
+    if valid_move?(index) == true
+      move(index)
       display_board
-    else
+    elsif
       turn
     end
   end
 
   def won?
-    WIN_COMBINATIONS.each do |combo|
-      index_1 = combo[0]
-      index_2 = combo[1]
-      index_3 = combo[2]
-
-      if "X" == index_1 && index_2 && index_3
-        "WIN"
-        combo
-      elsif "O" == index_1 && index_2 && index_3
-        "WIN"
-        combo
+    WIN_COMBINATIONS.find do |i|
+      if @board[i[0]] == "X" && @board[i[1]] == "X" && @board[i[2]] == "X" ||
+        @board[i[0]] == "O" && @board[i[1]] == "O" && @board[i[2]] == "O"
+        return i
       else
         false
+        #binding.pry
       end
     end
   end
-
+  
+  def full?
+   @board.all? do |el|
+     if el == " "
+       false
+     else
+       true
+     end
+   end
+  end
+  
+  def draw?
+    !won? && full?
+  end
+  
+  def over?
+    won? || full?
+  end
+  
+  def winner
+    if won?
+      @board[won?[0]] == "X" ? "X" : "O"
+    else
+      nil
+    end
+  end
+  
+  def play
+    until over?
+    turn
+    end
+    
+    if won?
+      puts("Congratulations #{winner}!")
+    elsif draw?
+      puts("Cat's Game!")
+    end
+  end
 end
